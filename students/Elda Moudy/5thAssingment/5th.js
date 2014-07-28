@@ -1,40 +1,31 @@
 $(document).ready(function() {
+	//make tabs
 	
-  //make tabs: 
-	$(function() {
+  $(function() {
     $('#top_tabs').tabs();
+    $('#delete_task').hide();
   });
 
-// --------------------------
-// This is work in progress...I'm not sure why it's not working.
-// ---------------------------
 
-	// add task to list  
+	//add to list
+	$("#submit_task").click(function() {
+		var addNewTask = $('#newTaskDescription').val();
+  	if (addNewTask) {
+      $('#taskList').append('<div class="currentTask"><input type="checkbox"/>' + addNewTask + '</div>');
+			$('#newTaskDescription').val('');
+      $('#delete_task').show();
+		};
+	});
 
-	// $('#submit_task').click(function() {
-	// 	var addNewTask = $('#newTaskDescription').val();
- //  	if (addNewTask) {
- //      $('#taskList').append('<div class="currentTask"><input type="checkbox"/>' + addNewTask + '</div>');
-	// 		$('#newTaskDescription').val('');
-	// 	};
-	// });
-
-	// remove task from list
-	
-	// $("#delete_task").click(function() {
-	// 	$('.currentTask').has('input:checkbox:checked').remove();
-	// });
+	//remove from list
+	$("#delete_task").click(function() {
+//		$('.currentTask').toggle("puff", 500);
+		$('.currentTask').has('input:checkbox:checked').remove();
+//		if (isClicked) {
+//			$('.currentTask').remove();			
+//		};
+	});
 });
-
-
-
-
-
-
-
-
-
-
 //			$('.currentTask').fadeOut(500, function() {
 //			});
 //		$('.currentTask').toggle("puff", 500);
