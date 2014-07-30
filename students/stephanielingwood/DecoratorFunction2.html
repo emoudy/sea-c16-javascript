@@ -1,0 +1,51 @@
+<script>
+//Many thanks to Jim Fall, who annotated his code, and for pointing me to http://javascript.info/tutorial/decorators. The javascript.info tutorials on scopes and closures and decorators made this possible.
+
+//THE PROBLEM:
+//Make a function that tracks how many times another function is called (in this example, the Add function).
+
+//Here's the original Add function
+function Add(x, y) {
+  return x + y;
+}
+
+//Next, we make a countDecorator function, which we use to modify the Add (or other) functions. This creates a variable (callCount) to track the number of calls in a scope it (the countDecorator function) can access. Then, it increments callCount and calls the Add function with the parameters the user passed in. Finally, it returns the new value for callCount.
+
+//so, first up: define the function. Callback will be the name of the function we want to track.
+var countDecorator = function(callback) {
+	var callCount = 0
+
+//Now, we need to do two things: call the function Add (so it actually runs, and so it runs with the values the user passed in when they called it), and increment the variable callCount.
+//First things first: Make a function that does this.
+//Then, increment callCount. You do this first because once you have a line that returns something, the function won't run any more code after it. (?) 
+//Finally, call the function. Let's break down that line of code.
+//Return makes it run, so that it can spit something out.
+//callback references the name of the particular function we wanted to track calls for. That function name was passed in to the countDecorator function two lines earlier.
+//.apply is a fancy way of saying "run this function, with this information." If you take the function out of its regular environment, like we did here, it won't know what its scope is, or what values were passed in. You have to remind it of what those were. Alternately, you could pass in your own values for those things...cue nefarious laughter.
+//The scope (a.k.a. what "this" you're referring to, if you say .this) is the first parameter. Here, we really don't care about that too much, because there aren't any variables or other goodies bound to that scope that we need to access. So Null it is.
+//Next up is the arguments we want to pass in to the function. Here, it's what we want to add - the values for x and y. If we simply say "arguments," it'll bring in the arguments that the user passes in. 
+	var counter = function() {
+			callCount++;
+			return callback.apply(null, arguments);
+		}
+
+//Next up: actually return the value of callCount. We do this by giving our counter function something else to do when it's run: a new method. (Remember, functions are objects, too! This means they can have their own methods.)
+	counter.callCount = function() {
+		return callCount;
+	}
+
+//Finally, we need to function 'counter' to do its thing.
+	return counter;
+}
+
+//in this line, the function Add is redefined as being the Add with the countDecorator functionality added onto it. In other words, we just modified Add...without touching the function itself.
+var Add = countDecorator(Add);
+
+//try it and see if it works!
+console.log(Add(1, 1));
+console.log(Add.callCount());
+
+console.log(Add(2, 2));
+console.log(Add.callCount());	
+
+</script>
